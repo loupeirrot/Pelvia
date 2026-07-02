@@ -83,14 +83,18 @@
   .dark h2,.dark h3{color:var(--ivoire)}
   .dark .kicker{color:var(--terracotta)}
 
-  .fond-flex{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:center;margin-top:20px}
-  @media(max-width:850px){.fond-flex{grid-template-columns:1fr}}
-  .fond-flex img{width:100%;border-radius:18px;display:block}
-  .doc{margin-bottom:30px}
+  .fond-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:50px}
+  @media(max-width:800px){.fond-grid{grid-template-columns:1fr}}
+  .doc{background:#fff;border:1px solid rgba(46,64,87,.12);border-radius:18px;overflow:hidden}
+  .doc .ph{background:linear-gradient(180deg,var(--sable),#fff);padding:34px 34px 0;display:flex;justify-content:center}
+  .doc .ph img{max-height:340px;width:auto;display:block}
+  .doc .bio{padding:26px 32px 32px}
   .doc h3{font-size:1.25rem;margin-bottom:6px}
   .doc .role{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--terracotta);margin-bottom:10px}
   .doc p{font-size:.95rem;opacity:.92}
-  .note{font-size:.78rem;opacity:.55;margin-top:14px;font-style:italic}
+  .mood{margin-top:56px;border-radius:18px;overflow:hidden;border:1px solid rgba(46,64,87,.12)}
+  .mood img{width:100%;display:block}
+  .mood-cap{font-size:.82rem;opacity:.6;margin-top:12px;font-style:italic;text-align:center}
 
   .steps{margin-top:46px;display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
   @media(max-width:800px){.steps{grid-template-columns:1fr 1fr}}
@@ -167,6 +171,8 @@
         <p><strong style="font-weight:500;color:var(--ardoise)">L'aube</strong> — le demi-soleil terracotta posé sur l'horizon&nbsp;: le jour se lève sur des douleurs longtemps restées dans l'ombre. C'est la promesse de Pelvia, dessinée.</p>
       </div>
     </div>
+    <div class="mood"><img src="assets/22-aube-atlantique.jpg" alt="Aube sur l'Atlantique, côte basque" loading="lazy"></div>
+    <p class="mood-cap">Le symbole en photographie&nbsp;: l'aube sur l'Atlantique — la direction du territoire visuel de la marque.</p>
   </section>
 
   <hr class="horizon">
@@ -219,20 +225,22 @@
   <section id="fondatrices" class="wrap">
     <p class="kicker">Les fondatrices</p>
     <h2>Deux spécialistes, un même engagement.</h2>
-    <div class="fond-flex">
-      <img src="assets/21-fondatrices.jpg" alt="Les deux fondatrices de Pelvia">
-      <div>
-        <div class="doc">
+    <div class="fond-grid">
+      <div class="doc">
+        <div class="ph"><img src="assets/dr-theodore.png" alt="Dr Claire Théodore"></div>
+        <div class="bio">
           <h3>Dr Claire Théodore</h3>
           <p class="role">Gynécologue obstétricienne · Bayonne — Dax</p>
           <p>Spécialiste des pathologies mammaires et pelviennes bénignes, de l'endométriose et de la chirurgie de la fertilité. «&nbsp;Cette association existe pour que les femmes sachent plus tôt.&nbsp;»</p>
         </div>
-        <div class="doc">
+      </div>
+      <div class="doc">
+        <div class="ph"><img src="assets/dr-skali.png" alt="Dr Dounia Skali"></div>
+        <div class="bio">
           <h3>Dr Dounia Skali</h3>
           <p class="role">Chirurgienne gynécologue · Bayonne — Biarritz</p>
           <p>Spécialiste de la prise en charge chirurgicale de la femme et de la chirurgie gynécologique fonctionnelle. «&nbsp;Informer fait partie du soin.&nbsp;»</p>
         </div>
-        <p class="note">Photographie d'illustration provisoire — remplacée par les portraits officiels lors du shooting de lancement.</p>
       </div>
     </div>
   </section>
