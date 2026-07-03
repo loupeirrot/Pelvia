@@ -146,6 +146,16 @@
   .b-bann{grid-column:span 7;display:flex;align-items:center}
   @media(max-width:820px){.b-site,.b-carte,.b-kit,.b-bann{grid-column:span 12}}
 
+  /* ─ CONTENUS (posts en arches) ─ */
+  .posts{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:60px}
+  @media(max-width:820px){.posts{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}}
+  .post{border:1.5px solid rgba(46,64,87,.4);border-radius:999px 999px 16px 16px;padding:13px;background:#fff;transition:transform .4s var(--ease)}
+  .post:hover{transform:translateY(-6px)}
+  .post .ph{border-radius:999px 999px 8px 8px;overflow:hidden}
+  .post img{width:100%;height:auto;display:block}
+  .post .cap{padding:16px 10px 6px;font-size:.85rem;text-align:center;opacity:.85}
+  .post .cap b{display:block;font-family:'Playfair Display',serif;color:var(--ardoise);font-weight:500;font-size:1.05rem;margin-bottom:2px}
+
   /* ─ FONDATRICES ─ */
   .fond{background:linear-gradient(180deg,var(--ivoire),#f5efe4)}
   .fond-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:60px}
@@ -203,6 +213,7 @@
       <a href="#identite">L'identité</a>
       <a href="#methode">La méthode</a>
       <a href="#supports">Les supports</a>
+      <a href="#contenus">Les contenus</a>
       <a href="#fondatrices">Les fondatrices</a>
     </div>
   </div>
@@ -330,6 +341,29 @@
         <figure class="b-carte reveal"><img src="assets/18-carte-de-visite-final.jpg" alt="Cartes de visite Pelvia" loading="lazy"><figcaption><b>La papeterie</b>recto ivoire, verso ardoise, rendu letterpress</figcaption></figure>
         <figure class="b-kit reveal"><img src="assets/20-kit-reseaux-sociaux-final.jpg" alt="Kit réseaux sociaux" loading="lazy"><figcaption><b>Les réseaux</b>avatars, gabarits de posts et de stories</figcaption></figure>
         <figure class="b-bann reveal"><img src="assets/19-banniere-linkedin-final.jpg" alt="Bannière LinkedIn, la ligne d'horizon" loading="lazy"><figcaption><b>La ligne d'horizon</b>le trait du logo devient le fil de tous les supports</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENUS -->
+  <section id="contenus" class="sec-pad">
+    <div class="wrap">
+      <div class="divider" style="margin-bottom:64px" aria-hidden="true"><div class="dline"></div><div class="dsun"></div></div>
+      <h2 class="sec reveal">Des contenus qui portent la voix de l'association.</h2>
+      <p class="sec-sub reveal">Pédagogie graphique, terrain, incarnation&nbsp;: trois registres, une seule ligne éditoriale.</p>
+      <div class="posts">
+        <figure class="post reveal">
+          <div class="ph"><img src="assets/27-post-pedagogie.jpg" alt="Post pédagogique : 5 signes à ne pas banaliser" loading="lazy"></div>
+          <figcaption class="cap"><b>La pédagogie</b>carrousels et infographies validés médicalement</figcaption>
+        </figure>
+        <figure class="post reveal">
+          <div class="ph"><img src="assets/28-post-evenement.jpg" alt="Post événement : rencontre de sensibilisation Pelvia" loading="lazy"></div>
+          <figcaption class="cap"><b>Le terrain</b>événements et rencontres de sensibilisation</figcaption>
+        </figure>
+        <figure class="post reveal">
+          <div class="ph"><img src="assets/29-post-consultation.jpg" alt="Post incarnation : l'écoute en consultation" loading="lazy"></div>
+          <figcaption class="cap"><b>L'incarnation</b>le soin raconté avec justesse</figcaption>
+        </figure>
       </div>
     </div>
   </section>
