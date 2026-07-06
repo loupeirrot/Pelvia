@@ -53,17 +53,34 @@
     font-size:.8rem;letter-spacing:.22em;text-transform:uppercase;border:1px solid var(--ardoise);
     padding:16px 32px;border-radius:999px;transition:background .35s var(--ease),color .35s var(--ease)}
   .hero .cta:hover{background:var(--ardoise);color:var(--ivoire)}
-  .hero-arch{justify-self:end;width:min(100%,430px);border:1.5px solid rgba(46,64,87,.45);
+  .hero-arch{position:relative;justify-self:end;width:min(100%,430px);border:1.5px solid rgba(46,64,87,.45);
     border-radius:999px 999px 18px 18px;padding:15px;opacity:0;transform:translateY(26px)}
   @media(max-width:900px){.hero-arch{justify-self:center}}
-  .hero-arch .ph{border-radius:999px 999px 10px 10px;overflow:hidden}
+  .hero-arch .ph{border-radius:999px 999px 10px 10px;overflow:hidden;position:relative;z-index:1}
   .hero-arch img{width:100%;height:auto}
+  /* Échos de l'arche : le motif « porte » qui résonne autour de la photo */
+  .arch-echo{position:absolute;left:50%;bottom:0;width:158%;height:130%;transform:translateX(-50%);
+    z-index:0;pointer-events:none;overflow:visible}
+  .arch-echo path{fill:none;stroke:var(--ardoise)}
+  .arch-echo .e1{opacity:.22;stroke-width:1.4}
+  .arch-echo .e2{opacity:.13;stroke-width:1.1}
+  .arch-echo .e3{opacity:.06;stroke-width:1}
+  @media(max-width:900px){.arch-echo{width:116%;height:109%}.arch-echo .e3{display:none}}
 
   /* ─ Séparateur signature : horizon + demi-soleil ─ */
   .divider{position:relative;height:26px}
   .divider .dline{position:absolute;left:0;right:0;bottom:0;height:1.5px;background:var(--ardoise);opacity:.75;transform-origin:center;transform:scaleX(0)}
   .divider .dsun{position:absolute;left:50%;bottom:1.5px;width:52px;height:26px;margin-left:-26px;
     background:var(--terracotta);border-radius:999px 999px 0 0;transform:scaleY(0);transform-origin:bottom}
+
+  /* ─ Micro-animations : le demi-soleil qui respire, le logo qui s'éveille ─ */
+  @media (prefers-reduced-motion: no-preference){
+    .divider.lit .dsun{animation:sunGlow 5s ease-in-out infinite}
+    @keyframes sunGlow{0%,100%{box-shadow:0 0 0 0 rgba(201,111,74,0)}50%{box-shadow:0 -3px 16px 2px rgba(201,111,74,.30)}}
+  }
+  .brand svg .sun{transform-box:fill-box;transform-origin:50% 100%;transition:transform .45s var(--ease)}
+  .brand:hover svg .sun{transform:translateY(-2px) scale(1.06)}
+  .chip:hover,.post:hover{box-shadow:0 18px 42px -24px rgba(201,111,74,.55)}
 
   /* ─ MANIFESTE ─ */
   .manifeste{padding:clamp(96px,13vh,150px) 0 clamp(60px,8vh,90px)}
@@ -213,7 +230,7 @@
   <div class="wrap">
     <a class="brand" href="#top" aria-label="Pelvia — Institut du pelvis du Pays Basque">
       <svg viewBox="0 0 120 140" aria-hidden="true">
-        <path d="M48 99 A12 12 0 0 1 72 99 Z" fill="#C96F4A"/>
+        <path class="sun" d="M48 99 A12 12 0 0 1 72 99 Z" fill="#C96F4A"/>
         <line class="stroke" x1="10" y1="99" x2="110" y2="99" stroke="#2E4057" stroke-width="3.5"/>
         <path class="stroke" d="M26 120 V60 a34 34 0 0 1 68 0 V120 Z" fill="none" stroke="#2E4057" stroke-width="3.5"/>
       </svg>
@@ -245,6 +262,11 @@
         <a class="cta" href="#symbole">Découvrir le projet</a>
       </div>
       <div class="hero-arch" id="heroArch">
+        <svg class="arch-echo" viewBox="0 0 200 240" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+          <path class="e3" d="M-8 240 V66 A108 108 0 0 1 208 66 V240"/>
+          <path class="e2" d="M6 240 V78 A94 94 0 0 1 194 78 V240"/>
+          <path class="e1" d="M20 240 V90 A80 80 0 0 1 180 90 V240"/>
+        </svg>
         <div class="ph"><img src="assets/26-hero-communaute.jpg" alt="Trois femmes de générations différentes discutent, complices, dans un salon lumineux" fetchpriority="high"></div>
       </div>
     </div>
@@ -481,16 +503,20 @@
   gsap.to('.hero h1 .line>span', {y:0, duration:1.25, ease:'power4.out', stagger:.13, delay:.1});
   gsap.from(['.hero .sur','.hero .lede','.hero .cta'], {opacity:0, y:20, duration:.9, ease:'power3.out', stagger:.11, delay:.5});
   gsap.to('#heroArch', {opacity:1, y:0, duration:1.2, ease:'power3.out', delay:.55});
+  // Les échos de l'arche se posent l'un après l'autre, de l'intérieur vers l'extérieur
+  gsap.from('.arch-echo .e1, .arch-echo .e2, .arch-echo .e3',
+    {opacity:0, y:14, duration:1.3, ease:'power3.out', stagger:.18, delay:.9});
+  const hd = document.getElementById('heroDivider');
   gsap.timeline({delay:1})
     .to('#heroDivider .dline', {scaleX:1, duration:1.5, ease:'power2.inOut'})
-    .to('#heroDivider .dsun', {scaleY:1, duration:.9, ease:'power2.out'}, '-=.5');
+    .to('#heroDivider .dsun', {scaleY:1, duration:.9, ease:'power2.out', onComplete:()=>hd.classList.add('lit')}, '-=.5');
 
-  /* Séparateurs de section : même geste, au scroll */
+  /* Séparateurs de section : même geste, au scroll ; le halo naît après le lever */
   document.querySelectorAll('.divider').forEach(el=>{
     if (el.id==='heroDivider') return;
     gsap.timeline({scrollTrigger:{trigger:el, start:'top 88%'}})
       .to(el.querySelector('.dline'), {scaleX:1, duration:1.2, ease:'power2.inOut'})
-      .to(el.querySelector('.dsun'), {scaleY:1, duration:.7, ease:'power2.out'}, '-=.4');
+      .to(el.querySelector('.dsun'), {scaleY:1, duration:.7, ease:'power2.out', onComplete:()=>el.classList.add('lit')}, '-=.4');
   });
 
   /* Manifeste : les mots s'allument au fil du scroll (narration) */
