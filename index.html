@@ -186,6 +186,31 @@
 
   .reveal{opacity:0;transform:translateY(34px)}
 
+  /* ─ INTRO CINÉMATIQUE « La Traversée » ─ */
+  #intro{position:fixed;inset:0;z-index:100;overflow:hidden;
+    background:var(--ivoire) url('assets/traversee/f_001.jpg') center/cover no-repeat}
+  #introSpacer{height:420vh}
+  html.intro-on main{margin-top:-100vh}
+  #introCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #introVeil{position:absolute;inset:0;background:var(--ivoire);opacity:0;pointer-events:none;z-index:2}
+  #introText{position:absolute;left:0;right:0;bottom:15vh;text-align:center;padding:0 24px;z-index:3;pointer-events:none}
+  #introText .l{display:block;overflow:hidden}
+  #introText .l span{display:inline-block;transform:translateY(110%);font-family:'Playfair Display',serif;
+    color:var(--ardoise);font-size:clamp(1.9rem,4.6vw,3.5rem);line-height:1.16;font-weight:500}
+  #introSkip{position:absolute;top:22px;right:clamp(20px,5vw,44px);z-index:4;background:rgba(250,246,239,.72);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid var(--hairline);color:var(--ardoise);
+    font-family:'Figtree',sans-serif;font-weight:400;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+    padding:11px 20px;border-radius:999px;cursor:pointer;transition:background .3s var(--ease)}
+  #introSkip:hover,#introSkip:focus-visible{background:var(--ivoire);outline:2px solid var(--terracotta);outline-offset:2px}
+  #introHint{position:absolute;left:0;right:0;bottom:34px;text-align:center;font-size:.7rem;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--ardoise);opacity:.6;z-index:3;pointer-events:none;transition:opacity .5s var(--ease)}
+  #introHint .ar{display:block;margin-top:9px;font-size:1rem;animation:introBob 1.9s ease-in-out infinite}
+  @keyframes introBob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+  html.intro-done #intro{opacity:0;transition:opacity .6s var(--ease);pointer-events:none}
+  html.intro-on nav.top{opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
+  html.intro-on.intro-done nav.top{opacity:1;pointer-events:auto}
+  @media (prefers-reduced-motion: reduce){#introText .l span{transform:none}}
+
   @media (prefers-reduced-motion: reduce){
     .hero h1 .line>span{transform:none}
     .manifeste p.big .w{opacity:1}
@@ -197,6 +222,19 @@
 </style>
 </head>
 <body>
+
+<!-- OUVERTURE CINÉMATIQUE « La Traversée » (première visite, desktop) -->
+<section id="intro" aria-label="Introduction animée : le lever du jour à travers la porte Pelvia">
+  <canvas id="introCanvas" aria-hidden="true"></canvas>
+  <div id="introVeil" aria-hidden="true"></div>
+  <div id="introText" aria-hidden="true">
+    <span class="l" id="l1"><span>Comprendre,</span></span>
+    <span class="l" id="l2"><span>c'est déjà se soigner.</span></span>
+  </div>
+  <div id="introHint" aria-hidden="true">Faites lever le jour<span class="ar">↓</span></div>
+  <button id="introSkip" type="button">Passer l'introduction</button>
+</section>
+<div id="introSpacer" aria-hidden="true"></div>
 
 <nav class="top" id="nav">
   <div class="wrap">
@@ -427,6 +465,88 @@
 (function(){
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce || !window.gsap) return;
+
+  /* ═ OUVERTURE « La Traversée » : scroll-scrub de la séquence sur canvas ═
+     Un seul moment cinématique : le jour se lève dans la porte au scroll,
+     on franchit le seuil, la lumière devient la page. Puis plus aucune 3D. */
+  (function(){
+    const html = document.documentElement;
+    const intro = document.getElementById('intro');
+    const spacer = document.getElementById('introSpacer');
+    if (!intro || !spacer) return;
+    const seen = sessionStorage.getItem('pelvia_intro_seen');
+    const conn = navigator.connection;
+    const saveData = !!(conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType||'')));
+    const small = window.matchMedia('(max-width:900px)').matches;
+    // Portes de sortie : mobile, connexion lente, déjà vue, ou reduced-motion (déjà géré plus haut)
+    if (seen || saveData || small){ intro.remove(); spacer.remove(); return; }
+    html.classList.add('intro-on');
+
+    const N = 97;
+    const canvas = document.getElementById('introCanvas');
+    const ctx = canvas.getContext('2d', {alpha:false});
+    const imgs = new Array(N);
+    const src = i => 'assets/traversee/f_' + String(i+1).padStart(3,'0') + '.jpg';
+    const dpr = Math.min(window.devicePixelRatio||1, 2);
+    let vw=0, vh=0, cur=0;
+
+    function resize(){
+      vw = window.innerWidth; vh = window.innerHeight;
+      canvas.width = Math.round(vw*dpr); canvas.height = Math.round(vh*dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0); draw(cur);
+    }
+    function nearest(i){
+      for (let k=i;k>=0;k--) if (imgs[k]&&imgs[k].complete) return imgs[k];
+      for (let k=i+1;k<N;k++) if (imgs[k]&&imgs[k].complete) return imgs[k];
+      return null;
+    }
+    function cover(img){
+      const iw=img.naturalWidth, ih=img.naturalHeight;
+      const s=Math.max(vw/iw, vh/ih), w=iw*s, h=ih*s;
+      ctx.drawImage(img,(vw-w)/2,(vh-h)/2,w,h);
+    }
+    function draw(i){ cur=i; const im=(imgs[i]&&imgs[i].complete)?imgs[i]:nearest(i); if(im) cover(im); }
+
+    for (let i=0;i<N;i++){ const im=new Image(); im.decoding='async'; im.onload=()=>{ if(i===0) draw(0); }; im.src=src(i); imgs[i]=im; }
+    window.addEventListener('resize', resize); resize();
+
+    const veil = document.getElementById('introVeil');
+    const hint = document.getElementById('introHint');
+    const s1 = document.querySelector('#l1 span');
+    const s2 = document.querySelector('#l2 span');
+    gsap.registerPlugin(ScrollTrigger);
+
+    // masque d'apparition/disparition d'une ligne sur l'intervalle [a,b]→visible→[c,d]
+    function band(p,a,b,c,d){
+      if (p<a || p>d) return 110;
+      if (p<b) return 110*(1-(p-a)/(b-a));
+      if (p<=c) return 0;
+      return 110*(p-c)/(d-c);
+    }
+    const clamp = (v)=> v<0?0:v>1?1:v;
+
+    function render(p){
+      draw(Math.min(N-1, Math.max(0, Math.round(p*(N-1)))));
+      s1.style.transform = 'translateY(' + band(p,0.08,0.20,0.58,0.68) + '%)';
+      s2.style.transform = 'translateY(' + band(p,0.28,0.40,0.66,0.76) + '%)';
+      veil.style.opacity = clamp((p-0.80)/0.16);
+      hint.style.opacity = p>0.05 ? 0 : 0.6;
+    }
+
+    ScrollTrigger.create({
+      trigger: spacer, start:'top top', end:'bottom bottom', scrub:true,
+      onUpdate: s => render(s.progress),
+      onLeave: () => { html.classList.add('intro-done'); sessionStorage.setItem('pelvia_intro_seen','1'); },
+      onEnterBack: () => html.classList.remove('intro-done')
+    });
+
+    document.getElementById('introSkip').addEventListener('click', () => {
+      sessionStorage.setItem('pelvia_intro_seen','1');
+      window.scrollTo({ top: spacer.offsetHeight - window.innerHeight + 2, behavior:'smooth' });
+    });
+
+    window.addEventListener('load', () => ScrollTrigger.refresh());
+  })();
   gsap.registerPlugin(ScrollTrigger);
 
   /* Hero : le titre se révèle, l'arche photo arrive, puis la signature :
