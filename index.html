@@ -58,14 +58,6 @@
   @media(max-width:900px){.hero-arch{justify-self:center}}
   .hero-arch .ph{border-radius:999px 999px 10px 10px;overflow:hidden;position:relative;z-index:1}
   .hero-arch img{width:100%;height:auto}
-  /* Échos de l'arche : le motif « porte » qui résonne autour de la photo */
-  .arch-echo{position:absolute;left:50%;bottom:0;width:158%;height:130%;transform:translateX(-50%);
-    z-index:0;pointer-events:none;overflow:visible}
-  .arch-echo path{fill:none;stroke:var(--ardoise)}
-  .arch-echo .e1{opacity:.22;stroke-width:1.4}
-  .arch-echo .e2{opacity:.13;stroke-width:1.1}
-  .arch-echo .e3{opacity:.06;stroke-width:1}
-  @media(max-width:900px){.arch-echo{width:116%;height:109%}.arch-echo .e3{display:none}}
 
   /* ─ Séparateur signature : horizon + demi-soleil ─ */
   .divider{position:relative;height:26px}
@@ -262,11 +254,6 @@
         <a class="cta" href="#symbole">Découvrir le projet</a>
       </div>
       <div class="hero-arch" id="heroArch">
-        <svg class="arch-echo" viewBox="0 0 200 240" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
-          <path class="e3" d="M-8 240 V66 A108 108 0 0 1 208 66 V240"/>
-          <path class="e2" d="M6 240 V78 A94 94 0 0 1 194 78 V240"/>
-          <path class="e1" d="M20 240 V90 A80 80 0 0 1 180 90 V240"/>
-        </svg>
         <div class="ph"><img src="assets/26-hero-communaute.jpg" alt="Trois femmes de générations différentes discutent, complices, dans un salon lumineux" fetchpriority="high"></div>
       </div>
     </div>
@@ -503,9 +490,6 @@
   gsap.to('.hero h1 .line>span', {y:0, duration:1.25, ease:'power4.out', stagger:.13, delay:.1});
   gsap.from(['.hero .sur','.hero .lede','.hero .cta'], {opacity:0, y:20, duration:.9, ease:'power3.out', stagger:.11, delay:.5});
   gsap.to('#heroArch', {opacity:1, y:0, duration:1.2, ease:'power3.out', delay:.55});
-  // Les échos de l'arche se posent l'un après l'autre, de l'intérieur vers l'extérieur
-  gsap.from('.arch-echo .e1, .arch-echo .e2, .arch-echo .e3',
-    {opacity:0, y:14, duration:1.3, ease:'power3.out', stagger:.18, delay:.9});
   const hd = document.getElementById('heroDivider');
   gsap.timeline({delay:1})
     .to('#heroDivider .dline', {scaleX:1, duration:1.5, ease:'power2.inOut'})
